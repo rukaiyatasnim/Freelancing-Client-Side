@@ -4,6 +4,8 @@ import {
 import ErrorPage from "../Pages/ErrorPage";
 import HomeLayOut from "../Layout/HomeLayout";
 import Main from "../Components/Main";
+import Terms from "../Components/Terms";
+import Privacy from "../Components/Privacy";
 
 const router = createBrowserRouter([
     {
@@ -15,6 +17,14 @@ const router = createBrowserRouter([
                 element: <Main></Main>
             },
         ]
+    },
+    {
+        path: "/terms",
+        element: <Terms></Terms>
+    },
+    {
+        path: "/privacy",
+        element: <Privacy></Privacy>
     },
     {
         path: "/*",
