@@ -12,7 +12,7 @@ const AuthLayOut = () => {
             <main>
                 <Outlet></Outlet>
             </main>
-            <footer>
+            <footer className='top-0'>
                 <Footer></Footer>
             </footer>
         </div>

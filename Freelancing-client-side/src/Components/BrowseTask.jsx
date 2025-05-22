@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { getAuth } from "firebase/auth";
 
 const BrowseTasks = () => {
     const [tasks, setTasks] = useState([]);
@@ -10,37 +9,14 @@ const BrowseTasks = () => {
     useEffect(() => {
         const fetchTasks = async () => {
             try {
-                const auth = getAuth();
-                const user = auth.currentUser;
-
-                if (!user) {
-                    setError("You must be logged in.");
-                    return;
-                }
-
-                const token = await user.getIdToken();
-
-                const res = await fetch("http://localhost:3000/tasks", {
-                    headers: {
-                        "Content-Type": "application/json",
-                        Authorization: `Bearer ${token}`, // 🔐 Send token
-                    },
-                });
-
-                if (!res.ok) {
-                    throw new Error("Unauthorized access to tasks.");
-                }
+                const res = await fetch("http://localhost:3000/tasks");
+                if (!res.ok) throw new Error("Failed to fetch tasks.");
 
                 const data = await res.json();
+                if (!Array.isArray(data)) throw new Error("Invalid response from server.");
 
-                // 👇 Make sure it's an array before setting
-                if (Array.isArray(data)) {
-                    setTasks(data);
-                } else {
-                    throw new Error("Invalid response from server.");
-                }
+                setTasks(data);
             } catch (err) {
-                console.error(err);
                 setError(err.message);
             }
         };
@@ -50,12 +26,23 @@ const BrowseTasks = () => {
 
     return (
         <div className="max-w-7xl mx-auto p-8">
-            <h1 className="text-4xl font-bold mb-8 text-center">Browse All Tasks</h1>
+            {/* Show heading only if tasks are available and no error */}
+            {!error && tasks.length > 0 && (
+                <h1 className="text-4xl font-bold text-green-700 mb-8 text-center">
+                    Browse All Tasks
+                </h1>
+            )}
 
             {error ? (
                 <p className="text-red-500 text-center">{error}</p>
             ) : tasks.length === 0 ? (
-                <p className="text-center text-gray-500">No tasks found.</p>
+                <div className="text-center py-20 bg-emerald-50 rounded-xl shadow-inner border border-emerald-100">
+                    <div className="text-5xl mb-4">🧐</div>
+                    <h2 className="text-2xl font-semibold text-emerald-700 mb-2">No Tasks Available</h2>
+                    <p className="text-gray-600 max-w-md mx-auto">
+                        It looks like no tasks have been posted yet. Please check back later or try refreshing the page.
+                    </p>
+                </div>
             ) : (
                 <div className="grid gap-8 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
                     {tasks.map((task) => (
@@ -64,7 +51,7 @@ const BrowseTasks = () => {
                             className="card bg-white shadow-md rounded-lg border border-gray-200 hover:shadow-lg transition-shadow duration-300"
                         >
                             <div className="card-body p-6 flex flex-col">
-                                <h2 className="card-title text-2xl font-semibold mb-2 text-indigo-700">
+                                <h2 className="card-title text-2xl font-semibold mb-2 text-emerald-700">
                                     {task.title}
                                 </h2>
                                 <p className="mb-1 text-sm font-medium text-gray-600">
@@ -79,12 +66,13 @@ const BrowseTasks = () => {
                                 <p className="mb-3 text-sm font-medium text-gray-600">
                                     Budget: <span className="font-normal">${task.budget}</span>
                                 </p>
-                                <p className="text-gray-700 flex-grow mb-6 line-clamp-4">
-                                    {task.description}
+                                <p className="mb-3 text-sm font-medium text-gray-600">
+                                    Description: <span className="font-normal">{task.description}</span>
                                 </p>
+
                                 <button
                                     onClick={() => navigate(`/tasks/${task._id}`)}
-                                    className="btn btn-primary btn-sm self-start"
+                                    className="btn bg-emerald-700 text-white btn-sm self-start"
                                 >
                                     See Details
                                 </button>
@@ -95,6 +83,7 @@ const BrowseTasks = () => {
             )}
         </div>
     );
+    
 };
 
 export default BrowseTasks;

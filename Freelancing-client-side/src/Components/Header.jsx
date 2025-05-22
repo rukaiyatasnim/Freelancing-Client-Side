@@ -23,7 +23,7 @@ const Header = () => {
                     to="/"
                     className={({ isActive }) =>
                         isActive
-                            ? "text-cyan-500 font-semibold border-b-2 border-cyan-500"
+                            ? "text-stone-800 font-semibold border-b-2 border-stone-800"
                             : ""
                     }
                 >
@@ -35,7 +35,7 @@ const Header = () => {
                     to="/addtask"
                     className={({ isActive }) =>
                         isActive
-                            ? "text-cyan-500 font-semibold border-b-2 border-cyan-500"
+                            ? "text-stone-800 font-semibold border-b-2 border-stone-800"
                             : ""
                     }
                 >
@@ -47,7 +47,7 @@ const Header = () => {
                     to="/browsetask"
                     className={({ isActive }) =>
                         isActive
-                            ? "text-cyan-500 font-semibold border-b-2 border-cyan-500"
+                            ? "text-stone-800 font-semibold border-b-2 border-stone-800"
                             : ""
                     }
                 >
@@ -59,7 +59,7 @@ const Header = () => {
                     to="/myPostedTask"
                     className={({ isActive }) =>
                         isActive
-                            ? "text-cyan-500 font-semibold border-b-2 border-cyan-500"
+                            ? "text-stone-800 font-semibold border-b-2 border-stone-800"
                             : ""
                     }
                 >
@@ -109,7 +109,7 @@ const Header = () => {
                             Logout
                         </button>
                     ) : (
-                        <Link to="/auth/login" className="btn bg-cyan-500 text-white">
+                        <Link to="/auth/login" className="btn bg-emerald-700 text-white">
                             Login
                         </Link>
                     )
