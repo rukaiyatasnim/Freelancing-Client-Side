@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
-import app from "../Firebase/firebase.config"; // Make sure this path is correct
-import { useNavigate } from "react-router-dom"; // ✅ Import useNavigate
+import app from "../Firebase/firebase.config";
+import { useNavigate } from "react-router-dom";
+import toast from "react-hot-toast"; // ✅ Import toast
 
 const auth = getAuth(app);
 
@@ -17,7 +18,7 @@ const AddTask = () => {
     });
 
     const [loadingUser, setLoadingUser] = useState(true);
-    const navigate = useNavigate(); // ✅ Initialize useNavigate
+    const navigate = useNavigate();
 
     useEffect(() => {
         const unsubscribe = onAuthStateChanged(auth, (user) => {
@@ -43,7 +44,7 @@ const AddTask = () => {
         e.preventDefault();
 
         if (!formData.userEmail) {
-            alert("User not authenticated. Please log in first.");
+            toast.error("Please log in to add a task.");
             return;
         }
 
@@ -60,13 +61,13 @@ const AddTask = () => {
             const data = await res.json();
 
             if (res.ok && (data.insertedId || data.acknowledged)) {
-                alert("✅ Task added successfully!");
+                toast.success(" Task added successfully!");
                 navigate("/myPostedTask");
             } else {
-                alert(data.message || "Failed to add task.");
+                toast.error(data.message || "Failed to add task.");
             }
         } catch (error) {
-            alert("❌ Network error: " + error.message);
+            toast.error(" Network error: " + error.message);
         }
     };
 

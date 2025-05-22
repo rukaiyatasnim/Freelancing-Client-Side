@@ -1,6 +1,7 @@
 import React, { useEffect, useState, useContext } from "react";
 import { AuthContext } from "../Provider/AuthProvider";
 import { Link } from "react-router-dom";
+import { Toaster, toast } from "react-hot-toast";
 
 const MyPostedTasks = () => {
     const { user } = useContext(AuthContext);
@@ -29,6 +30,7 @@ const MyPostedTasks = () => {
             .catch((err) => {
                 setError(err.message);
                 setLoading(false);
+                toast.error(err.message);
             });
     }, [user]);
 
@@ -44,12 +46,12 @@ const MyPostedTasks = () => {
             });
 
             const data = await res.json();
-
             if (!res.ok) throw new Error(data.message || "Failed to delete task");
 
             setTasks((prev) => prev.filter((task) => task._id !== taskId));
+            toast.success("Task deleted successfully!");
         } catch (err) {
-            alert(err.message);
+            toast.error(err.message);
         }
     };
 
@@ -84,43 +86,37 @@ const MyPostedTasks = () => {
                 prev.map((task) => (task._id === selectedTask._id ? selectedTask : task))
             );
 
-            alert("Task updated successfully!");
+            toast.success("Task updated successfully!");
             document.getElementById("update_modal").close();
             setSelectedTask(null);
         } catch (err) {
-            alert(err.message);
+            toast.error(err.message);
         }
     };
 
-    if (loading) {
-        return <p className="text-center py-10">Loading tasks...</p>;
-    }
-
-    if (error) {
-        return <p className="text-center py-10 text-red-600">{error}</p>;
-    }
-
-    if (tasks.length === 0) {
-        return (
-            <div className="flex flex-col items-center justify-center min-h-[70vh] px-4">
-                <p className="text-2xl font-semibold text-gray-700 mb-6 text-center">
-                    You haven't posted any tasks yet.
-                </p>
-                <Link
-                    to="/addtask"
-                    className="btn bg-emerald-700 text-white px-6 py-3 rounded hover:bg-emerald-800 transition"
-                >
-                    Add New Task
-                </Link>
-            </div>
-        );
-    }
-
     return (
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
+            <Toaster position="top-center" reverseOrder={false} />
             <h1 className="text-4xl font-bold mb-8 text-center text-emerald-700">My Posted Tasks</h1>
 
-            {/* Table for md and larger */}
+            {loading && <p className="text-center py-10">Loading tasks...</p>}
+            {error && <p className="text-center py-10 text-red-600">{error}</p>}
+
+            {!loading && tasks.length === 0 && (
+                <div className="flex flex-col items-center justify-center min-h-[70vh] px-4">
+                    <p className="text-2xl font-semibold text-gray-700 mb-6 text-center">
+                        You haven't posted any tasks yet.
+                    </p>
+                    <Link
+                        to="/addtask"
+                        className="btn bg-emerald-700 text-white px-6 py-3 rounded hover:bg-emerald-800 transition"
+                    >
+                        Add New Task
+                    </Link>
+                </div>
+            )}
+
+            {/* Table for larger screens */}
             <div className="hidden md:block overflow-auto rounded-xl border border-emerald-200 shadow-md">
                 <table className="min-w-full text-sm text-left">
                     <thead className="bg-emerald-100 text-emerald-900 text-md">
@@ -135,34 +131,19 @@ const MyPostedTasks = () => {
                     <tbody className="bg-white divide-y divide-gray-200">
                         {tasks.map((task) => (
                             <tr key={task._id} className="hover:bg-emerald-50 transition">
-                                <td className="p-4 whitespace-nowrap">{task.title}</td>
-                                <td className="p-4 whitespace-nowrap">{task.category}</td>
-                                <td className="p-4 whitespace-nowrap">
+                                <td className="p-4">{task.title}</td>
+                                <td className="p-4">{task.category}</td>
+                                <td className="p-4">
                                     {new Date(task.deadline).toLocaleDateString()}
                                 </td>
-                                <td className="p-4 whitespace-nowrap text-emerald-700 font-medium">
+                                <td className="p-4 text-emerald-700 font-medium">
                                     {task.status || "Pending"}
                                 </td>
-                                <td className="p-4 whitespace-nowrap text-center">
+                                <td className="p-4 text-center">
                                     <div className="flex flex-col sm:flex-row gap-2 justify-center">
-                                        <button
-                                            onClick={() => openUpdateModal(task)}
-                                            className="bg-blue-500 hover:bg-blue-600 text-white px-3 py-1 rounded-md shadow text-sm"
-                                        >
-                                            Update
-                                        </button>
-                                        <button
-                                            onClick={() => handleDelete(task._id)}
-                                            className="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded-md shadow text-sm"
-                                        >
-                                            Delete
-                                        </button>
-                                        <button
-                                            onClick={() => alert("View Bids clicked")}
-                                            className="bg-gray-700 hover:bg-gray-800 text-white px-3 py-1 rounded-md shadow text-sm"
-                                        >
-                                            Bids
-                                        </button>
+                                        <button onClick={() => openUpdateModal(task)} className="bg-blue-500 hover:bg-blue-600 text-white px-3 py-1 rounded-md shadow text-sm">Update</button>
+                                        <button onClick={() => handleDelete(task._id)} className="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded-md shadow text-sm">Delete</button>
+                                        <button onClick={() => toast("View Bids clicked")} className="bg-gray-700 hover:bg-gray-800 text-white px-3 py-1 rounded-md shadow text-sm">Bids</button>
                                     </div>
                                 </td>
                             </tr>
@@ -174,40 +155,15 @@ const MyPostedTasks = () => {
             {/* Cards for small screens */}
             <div className="md:hidden flex flex-col gap-6">
                 {tasks.map((task) => (
-                    <div
-                        key={task._id}
-                        className="bg-white shadow-md rounded-lg border border-gray-200 p-5 flex flex-col"
-                    >
+                    <div key={task._id} className="bg-white shadow-md rounded-lg border border-gray-200 p-5">
                         <h2 className="text-2xl font-semibold mb-2 text-emerald-700">{task.title}</h2>
-                        <p className="mb-1 text-sm font-medium text-gray-600">
-                            <span className="font-semibold">Category:</span> {task.category}
-                        </p>
-                        <p className="mb-1 text-sm font-medium text-gray-600">
-                            <span className="font-semibold">Deadline:</span>{" "}
-                            {new Date(task.deadline).toLocaleDateString()}
-                        </p>
-                        <p className="mb-3 text-sm font-medium text-gray-600">
-                            <span className="font-semibold">Status:</span> {task.status || "Pending"}
-                        </p>
-                        <div className="flex flex-wrap gap-2 mt-auto">
-                            <button
-                                onClick={() => openUpdateModal(task)}
-                                className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-md shadow text-sm flex-grow"
-                            >
-                                Update
-                            </button>
-                            <button
-                                onClick={() => handleDelete(task._id)}
-                                className="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-md shadow text-sm flex-grow"
-                            >
-                                Delete
-                            </button>
-                            <button
-                                onClick={() => alert("View Bids clicked")}
-                                className="bg-gray-700 hover:bg-gray-800 text-white px-4 py-2 rounded-md shadow text-sm flex-grow"
-                            >
-                                Bids
-                            </button>
+                        <p className="text-sm font-medium text-gray-600 mb-1"><strong>Category:</strong> {task.category}</p>
+                        <p className="text-sm font-medium text-gray-600 mb-1"><strong>Deadline:</strong> {new Date(task.deadline).toLocaleDateString()}</p>
+                        <p className="text-sm font-medium text-gray-600 mb-3"><strong>Status:</strong> {task.status || "Pending"}</p>
+                        <div className="flex flex-wrap gap-2">
+                            <button onClick={() => openUpdateModal(task)} className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-md shadow text-sm flex-grow">Update</button>
+                            <button onClick={() => handleDelete(task._id)} className="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-md shadow text-sm flex-grow">Delete</button>
+                            <button onClick={() => toast("View Bids clicked")} className="bg-gray-700 hover:bg-gray-800 text-white px-4 py-2 rounded-md shadow text-sm flex-grow">Bids</button>
                         </div>
                     </div>
                 ))}
@@ -215,93 +171,34 @@ const MyPostedTasks = () => {
 
             {/* Update Modal */}
             <dialog id="update_modal" className="modal">
-                <form
-                    method="dialog"
-                    className="modal-box w-full max-w-xl sm:max-w-2xl bg-white p-6 rounded-xl shadow-xl border border-emerald-200"
-                    onSubmit={(e) => {
-                        e.preventDefault();
-                        handleUpdateSubmit();
-                    }}
-                >
+                <form method="dialog" className="modal-box max-w-2xl p-6" onSubmit={(e) => {
+                    e.preventDefault();
+                    handleUpdateSubmit();
+                }}>
                     <h3 className="text-2xl font-semibold text-emerald-700 mb-6">Update Task</h3>
-
                     {selectedTask && (
                         <>
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                <input
-                                    name="title"
-                                    value={selectedTask.title}
-                                    onChange={handleChange}
-                                    placeholder="Title"
-                                    className="input input-bordered w-full rounded-md"
-                                    required
-                                />
-                                <select
-                                    name="category"
-                                    value={selectedTask.category}
-                                    onChange={handleChange}
-                                    className="select select-bordered w-full rounded-md"
-                                    required
-                                >
+                                <input name="title" value={selectedTask.title} onChange={handleChange} placeholder="Title" className="input input-bordered w-full" required />
+                                <select name="category" value={selectedTask.category} onChange={handleChange} className="select select-bordered w-full" required>
                                     <option value="">Select category</option>
                                     <option value="Web development">Web development</option>
                                     <option value="Design">Design</option>
                                     <option value="Marketing">Marketing</option>
                                     <option value="Writing">Writing</option>
                                 </select>
-                                <input
-                                    type="date"
-                                    name="deadline"
-                                    value={selectedTask.deadline.split("T")[0]}
-                                    onChange={handleChange}
-                                    className="input input-bordered w-full rounded-md"
-                                    required
-                                />
-                                <input
-                                    name="budget"
-                                    value={selectedTask.budget}
-                                    onChange={handleChange}
-                                    placeholder="Budget"
-                                    className="input input-bordered w-full rounded-md"
-                                    required
-                                />
-                                <input
-                                    name="userName"
-                                    value={selectedTask.userName}
-                                    readOnly
-                                    className="input input-bordered w-full bg-gray-100 rounded-md"
-                                />
-                                <input
-                                    name="userEmail"
-                                    value={selectedTask.userEmail}
-                                    readOnly
-                                    className="input input-bordered w-full bg-gray-100 rounded-md"
-                                />
+                                <input type="date" name="deadline" value={selectedTask.deadline.split("T")[0]} onChange={handleChange} className="input input-bordered w-full" required />
+                                <input name="budget" value={selectedTask.budget} onChange={handleChange} placeholder="Budget" className="input input-bordered w-full" required />
+                                <input name="userName" value={selectedTask.userName} readOnly className="input input-bordered bg-gray-100 w-full" />
+                                <input name="userEmail" value={selectedTask.userEmail} readOnly className="input input-bordered bg-gray-100 w-full" />
                             </div>
-
-                            <textarea
-                                name="description"
-                                value={selectedTask.description}
-                                onChange={handleChange}
-                                className="textarea textarea-bordered w-full mt-4 rounded-md"
-                                rows="4"
-                                required
-                            ></textarea>
-
+                            <textarea name="description" value={selectedTask.description} onChange={handleChange} className="textarea textarea-bordered w-full mt-4" rows="4" required />
                             <div className="modal-action mt-6 flex justify-end gap-4">
-                                <button
-                                    type="button"
-                                    className="btn btn-outline btn-error"
-                                    onClick={() => {
-                                        document.getElementById("update_modal").close();
-                                        setSelectedTask(null);
-                                    }}
-                                >
-                                    Cancel
-                                </button>
-                                <button type="submit" className="btn btn-success">
-                                    Update
-                                </button>
+                                <button type="button" className="btn btn-outline btn-error" onClick={() => {
+                                    document.getElementById("update_modal").close();
+                                    setSelectedTask(null);
+                                }}>Cancel</button>
+                                <button type="submit" className="btn btn-success">Update</button>
                             </div>
                         </>
                     )}
