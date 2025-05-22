@@ -15,8 +15,7 @@ const BrowseTasks = () => {
                 const data = await res.json();
                 if (!Array.isArray(data)) throw new Error("Invalid response from server.");
 
-                // Reverse tasks to show last added first
-                setTasks(data.reverse());
+                setTasks(data.reverse()); // Show newest first
             } catch (err) {
                 setError(err.message);
             }
@@ -27,7 +26,6 @@ const BrowseTasks = () => {
 
     return (
         <div className="max-w-7xl mx-auto p-8">
-            {/* Show heading only if tasks are available and no error */}
             {!error && tasks.length > 0 && (
                 <h1 className="text-4xl font-bold text-green-700 mb-8 text-center">
                     Browse All Tasks
@@ -61,7 +59,9 @@ const BrowseTasks = () => {
                                 <p className="mb-1 text-sm font-medium text-gray-600">
                                     Deadline:{" "}
                                     <span className="font-normal">
-                                        {new Date(task.deadline).toLocaleDateString()}
+                                        {task.deadline
+                                            ? new Date(task.deadline).toLocaleDateString()
+                                            : "N/A"}
                                     </span>
                                 </p>
                                 <p className="mb-3 text-sm font-medium text-gray-600">

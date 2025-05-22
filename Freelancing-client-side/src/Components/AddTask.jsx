@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 import app from "../Firebase/firebase.config";
 import { useNavigate } from "react-router-dom";
-import toast from "react-hot-toast"; // ✅ Import toast
+import toast from "react-hot-toast";
 
 const auth = getAuth(app);
 
@@ -18,6 +18,7 @@ const AddTask = () => {
     });
 
     const [loadingUser, setLoadingUser] = useState(true);
+    const [submitting, setSubmitting] = useState(false); // Disable button on submit
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -27,6 +28,13 @@ const AddTask = () => {
                     ...prev,
                     userEmail: user.email,
                     userName: user.displayName || "Anonymous",
+                }));
+            } else {
+                // Optional: clear user data if logged out
+                setFormData((prev) => ({
+                    ...prev,
+                    userEmail: "",
+                    userName: "",
                 }));
             }
             setLoadingUser(false);
@@ -48,6 +56,7 @@ const AddTask = () => {
             return;
         }
 
+        setSubmitting(true);
         try {
             const res = await fetch("http://localhost:3000/addtask", {
                 method: "POST",
@@ -61,23 +70,26 @@ const AddTask = () => {
             const data = await res.json();
 
             if (res.ok && (data.insertedId || data.acknowledged)) {
-                toast.success(" Task added successfully!");
+                toast.success("Task added successfully!");
                 setTimeout(() => {
                     navigate("/myPostedTask");
                 }, 1000);
-
             } else {
                 toast.error(data.message || "Failed to add task.");
             }
         } catch (error) {
-            toast.error(" Network error: " + error.message);
+            toast.error("Network error: " + error.message);
+        } finally {
+            setSubmitting(false);
         }
     };
 
     return (
         <div className="max-w-3xl mx-auto p-6">
             <div className="bg-base-100 shadow-xl rounded-lg p-8">
-                <h2 className="text-2xl font-bold mb-6 text-center text-green-700">Add New Task</h2>
+                <h2 className="text-2xl font-bold mb-6 text-center text-green-700">
+                    Add New Task
+                </h2>
 
                 {loadingUser ? (
                     <p className="text-center text-gray-500">Loading user info...</p>
@@ -133,6 +145,7 @@ const AddTask = () => {
                             value={formData.budget}
                             onChange={handleChange}
                             required
+                            min={0}
                         />
 
                         <input
@@ -141,6 +154,7 @@ const AddTask = () => {
                             value={formData.userEmail}
                             readOnly
                             className="input input-bordered w-full bg-gray-100 cursor-not-allowed"
+                            aria-label="User Email"
                         />
 
                         <input
@@ -149,13 +163,15 @@ const AddTask = () => {
                             value={formData.userName}
                             readOnly
                             className="input input-bordered w-full bg-gray-100 cursor-not-allowed"
+                            aria-label="User Name"
                         />
 
                         <button
                             type="submit"
                             className="btn text-white bg-emerald-700 w-full mt-4"
+                            disabled={submitting}
                         >
-                            Add Task
+                            {submitting ? "Adding..." : "Add Task"}
                         </button>
                     </form>
                 )}
