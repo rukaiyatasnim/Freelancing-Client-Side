@@ -3,23 +3,24 @@ import { Navigation, Pagination, Autoplay } from 'swiper/modules';
 import 'swiper/css';
 import 'swiper/css/navigation';
 import 'swiper/css/pagination';
+import { Link } from 'react-router-dom';
 
 const TextSlider = () => {
     const slides = [
         {
             title: "Start Freelancing Today",
             desc: "Join hundreds of local freelancers and grow your career with confidence.",
-            cta: "Join Now",
+            cta: <Link to="/auth/register">Join Now</Link>,
         },
         {
             title: "Hire in Under 5 Minutes",
             desc: "Post your task, get instant offers, and hire the right freelancer fast.",
-            cta: "Post a Task",
+            cta: <Link to="/addtask">Post A Task</Link>,
         },
         {
             title: "Trusted by 1,000+ Clients",
             desc: "Our platform has helped complete over 5,000 jobs with verified payment.",
-            cta: "Explore Projects",
+            cta: <Link to="/browsetask">Explore Here</Link>,
         },
     ];
 

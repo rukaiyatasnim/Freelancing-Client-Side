@@ -62,7 +62,10 @@ const AddTask = () => {
 
             if (res.ok && (data.insertedId || data.acknowledged)) {
                 toast.success(" Task added successfully!");
-                navigate("/myPostedTask");
+                setTimeout(() => {
+                    navigate("/myPostedTask");
+                }, 1000);
+
             } else {
                 toast.error(data.message || "Failed to add task.");
             }

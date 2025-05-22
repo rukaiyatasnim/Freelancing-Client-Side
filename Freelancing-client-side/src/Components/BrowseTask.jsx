@@ -15,7 +15,8 @@ const BrowseTasks = () => {
                 const data = await res.json();
                 if (!Array.isArray(data)) throw new Error("Invalid response from server.");
 
-                setTasks(data);
+                // Reverse tasks to show last added first
+                setTasks(data.reverse());
             } catch (err) {
                 setError(err.message);
             }
@@ -83,7 +84,6 @@ const BrowseTasks = () => {
             )}
         </div>
     );
-    
 };
 
 export default BrowseTasks;

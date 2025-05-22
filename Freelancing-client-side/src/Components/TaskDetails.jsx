@@ -1,81 +1,107 @@
-import React, { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import React, { useEffect, useState } from "react";
+import { useParams } from "react-router-dom";
+import toast from "react-hot-toast";
 
 const TaskDetails = () => {
     const { id } = useParams();
     const [task, setTask] = useState(null);
-    const [loading, setLoading] = useState(true);
+    const [bidsCount, setBidsCount] = useState(0);
+    const [error, setError] = useState("");
+    const userEmail = "user@example.com"; // replace with actual user email
 
     useEffect(() => {
-        fetch(`http://localhost:3000/tasks/${id}`)
-            .then((res) => {
-                if (!res.ok) throw new Error('Task not found');
-                return res.json();
-            })
-            .then((data) => {
+        const fetchTask = async () => {
+            try {
+                const res = await fetch(`http://localhost:3000/tasks/${id}`);
+                if (!res.ok) throw new Error("Failed to fetch task");
+                const data = await res.json();
                 setTask(data);
-                setLoading(false);
-            })
-            .catch((err) => {
+            } catch (err) {
+                setError(err.message);
+            }
+        };
+
+        const fetchBidsCount = async () => {
+            try {
+                const res = await fetch("http://localhost:3000/bids/count", {
+                    headers: { "x-user-email": userEmail },
+                });
+                if (!res.ok) throw new Error("Failed to fetch bids count");
+                const data = await res.json();
+                setBidsCount(data.bidsCount);
+            } catch (err) {
                 console.error(err);
-                setLoading(false);
+            }
+        };
+
+        fetchTask();
+        fetchBidsCount();
+    }, [id, userEmail]);
+
+    const handleBid = async () => {
+        try {
+            const res = await fetch("http://localhost:3000/bids", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ userEmail, taskId: id }),
             });
-    }, [id]);
+            if (!res.ok) throw new Error("Failed to place bid");
 
-    if (loading) {
-        return (
-            <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 to-blue-100">
-                <p className="text-lg font-medium text-gray-600 animate-pulse">
-                    Loading task details...
-                </p>
-            </div>
-        );
-    }
+            setBidsCount((prev) => prev + 1);
+            toast.success("🎉 Your bid has been placed!");
+        } catch (err) {
+            toast.error(`❌ ${err.message}`);
+        }
+    };
 
-    if (!task) {
+    if (error)
         return (
-            <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 to-blue-100">
-                <p className="text-lg font-medium text-red-500">Task not found.</p>
-            </div>
+            <div className="text-center text-red-600 mt-10 font-semibold">{error}</div>
         );
-    }
+    if (!task)
+        return <div className="text-center mt-10 text-gray-500">Loading task...</div>;
 
     return (
-        <div className="min-h-screen bg-gradient-to-br from-blue-50 to-blue-100 flex items-center justify-center p-6">
-            <div className="max-w-4xl w-full bg-white rounded-3xl shadow-2xl p-10 hover:shadow-blue-500 transition-shadow duration-500">
-                {/* Header with blue gradient */}
-                <div className="mb-8 rounded-xl bg-gradient-to-r from-blue-700 to-blue-500 p-6 text-white shadow-lg">
-                    <h1 className="text-4xl font-extrabold tracking-tight">{task.title}</h1>
-                    <p className="mt-2 text-blue-200 italic">{task.category}</p>
-                </div>
-
-                {/* Description Section */}
-                <p className="text-gray-800 text-lg leading-relaxed mb-10">
-                    <span className="block mb-2 text-xl font-semibold text-blue-700 border-l-4 border-blue-700 pl-3">
-                        Description
-                    </span>
-                    {task.description}
-                </p>
-
-                <div className="grid grid-cols-2 sm:grid-cols-4 gap-8 text-gray-700 text-lg font-semibold">
-                    <div>
-                        <h3 className="text-blue-600 text-xl mb-1">Deadline</h3>
-                        <p className="text-gray-600">{new Date(task.deadline).toLocaleDateString(undefined, { year: 'numeric', month: 'long', day: 'numeric' })}</p>
-                    </div>
-                    <div>
-                        <h3 className="text-blue-600 text-xl mb-1">Budget</h3>
-                        <p className="text-gray-600">${task.budget}</p>
-                    </div>
-                    <div>
-                        <h3 className="text-blue-600 text-xl mb-1">Status</h3>
-                        <p className="text-gray-600">{task.status || 'Pending'}</p>
-                    </div>
-                    <div>
-                        <h3 className="text-blue-600 text-xl mb-1 font-semibold">Category</h3>
-                        <p className="text-gray-600">{task.category}</p>
-                    </div>
-                </div>
+        <div className="max-w-md mx-auto my-12 p-5 bg-white rounded-xl shadow-md border border-emerald-300">
+            <div className="mb-4 bg-emerald-100 border border-emerald-300 rounded-lg p-3 text-center text-emerald-800 font-semibold text-base tracking-wide shadow-sm">
+                <span role="img" aria-label="star" className="mr-1">
+                    ⭐
+                </span>
+                You have placed bids for{" "}
+                <span className="text-emerald-900 font-bold">{bidsCount}</span>{" "}
+                {bidsCount === 1 ? "opportunity" : "opportunities"}.
             </div>
+
+            <h1 className="text-2xl font-extrabold text-emerald-700 mb-4 tracking-tight">
+                {task.title}
+            </h1>
+            <div className="space-y-2 text-gray-700 text-sm leading-relaxed">
+                <p>
+                    <strong className="text-emerald-600">Category:</strong>{" "}
+                    <span className="font-medium">{task.category}</span>
+                </p>
+                <p>
+                    <strong className="text-emerald-600">Deadline:</strong>{" "}
+                    <span className="font-medium">
+                        {new Date(task.deadline).toLocaleDateString()}
+                    </span>
+                </p>
+                <p>
+                    <strong className="text-emerald-600">Budget:</strong>{" "}
+                    <span className="font-medium">${task.budget}</span>
+                </p>
+                <p>
+                    <strong className="text-emerald-600">Description:</strong>{" "}
+                    <span className="font-normal">{task.description}</span>
+                </p>
+            </div>
+
+            <button
+                onClick={handleBid}
+                className="mt-6 w-full bg-emerald-700 hover:bg-emerald-800 text-white py-3 rounded-lg font-semibold shadow-md transition duration-300 flex justify-center items-center gap-2"
+            >
+                Place Bid
+            </button>
         </div>
     );
 };
