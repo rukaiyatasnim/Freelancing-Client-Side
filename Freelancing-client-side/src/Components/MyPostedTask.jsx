@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useContext } from "react";
-import { useNavigate, Link } from "react-router-dom";
 import { AuthContext } from "../Provider/AuthProvider";
+import { Link } from "react-router-dom";
 
 const MyPostedTasks = () => {
     const { user } = useContext(AuthContext);
@@ -68,25 +68,20 @@ const MyPostedTasks = () => {
 
     const handleUpdateSubmit = async () => {
         try {
-            const res = await fetch(
-                `http://localhost:3000/tasks/${selectedTask._id}`,
-                {
-                    method: "PUT",
-                    headers: {
-                        "Content-Type": "application/json",
-                        "x-user-email": user.email,
-                    },
-                    body: JSON.stringify(selectedTask),
-                }
-            );
+            const res = await fetch(`http://localhost:3000/tasks/${selectedTask._id}`, {
+                method: "PUT",
+                headers: {
+                    "Content-Type": "application/json",
+                    "x-user-email": user.email,
+                },
+                body: JSON.stringify(selectedTask),
+            });
             const data = await res.json();
 
             if (!res.ok) throw new Error(data.message || "Failed to update task");
 
             setTasks((prev) =>
-                prev.map((task) =>
-                    task._id === selectedTask._id ? selectedTask : task
-                )
+                prev.map((task) => (task._id === selectedTask._id ? selectedTask : task))
             );
 
             alert("Task updated successfully!");
@@ -105,7 +100,6 @@ const MyPostedTasks = () => {
         return <p className="text-center py-10 text-red-600">{error}</p>;
     }
 
-    // If no tasks, show centered message
     if (tasks.length === 0) {
         return (
             <div className="flex flex-col items-center justify-center min-h-[70vh] px-4">
@@ -123,52 +117,53 @@ const MyPostedTasks = () => {
     }
 
     return (
-        <div className="max-w-6xl mx-auto px-4 py-10">
-            <h1 className="text-4xl font-bold mb-8 text-center text-emerald-700">
-                My Posted Tasks
-            </h1>
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
+            <h1 className="text-4xl font-bold mb-8 text-center text-emerald-700">My Posted Tasks</h1>
 
-            <div className="overflow-x-auto shadow-lg rounded-xl border border-emerald-200">
-                <table className="w-full text-sm text-left rounded-xl overflow-hidden">
+            {/* Table for md and larger */}
+            <div className="hidden md:block overflow-auto rounded-xl border border-emerald-200 shadow-md">
+                <table className="min-w-full text-sm text-left">
                     <thead className="bg-emerald-100 text-emerald-900 text-md">
                         <tr>
-                            <th className="p-4 border-b border-emerald-300">Title</th>
-                            <th className="p-4 border-b border-emerald-300">Category</th>
-                            <th className="p-4 border-b border-emerald-300">Deadline</th>
-                            <th className="p-4 border-b border-emerald-300">Status</th>
-                            <th className="p-4 border-b border-emerald-300 text-center">Actions</th>
+                            <th className="p-4 border-b border-emerald-300 whitespace-nowrap">Title</th>
+                            <th className="p-4 border-b border-emerald-300 whitespace-nowrap">Category</th>
+                            <th className="p-4 border-b border-emerald-300 whitespace-nowrap">Deadline</th>
+                            <th className="p-4 border-b border-emerald-300 whitespace-nowrap">Status</th>
+                            <th className="p-4 border-b border-emerald-300 text-center whitespace-nowrap">Actions</th>
                         </tr>
                     </thead>
                     <tbody className="bg-white divide-y divide-gray-200">
                         {tasks.map((task) => (
                             <tr key={task._id} className="hover:bg-emerald-50 transition">
-                                <td className="p-4">{task.title}</td>
-                                <td className="p-4">{task.category}</td>
-                                <td className="p-4">
+                                <td className="p-4 whitespace-nowrap">{task.title}</td>
+                                <td className="p-4 whitespace-nowrap">{task.category}</td>
+                                <td className="p-4 whitespace-nowrap">
                                     {new Date(task.deadline).toLocaleDateString()}
                                 </td>
-                                <td className="p-4 text-emerald-700 font-medium">
+                                <td className="p-4 whitespace-nowrap text-emerald-700 font-medium">
                                     {task.status || "Pending"}
                                 </td>
-                                <td className="p-4 text-center space-x-2">
-                                    <button
-                                        onClick={() => openUpdateModal(task)}
-                                        className="bg-blue-500 hover:bg-blue-600 text-white px-3 py-1 rounded-md shadow"
-                                    >
-                                        Update
-                                    </button>
-                                    <button
-                                        onClick={() => handleDelete(task._id)}
-                                        className="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded-md shadow"
-                                    >
-                                        Delete
-                                    </button>
-                                    <button
-                                        onClick={() => alert("View Bids clicked")}
-                                        className="bg-gray-700 hover:bg-gray-800 text-white px-3 py-1 rounded-md shadow"
-                                    >
-                                        Bids
-                                    </button>
+                                <td className="p-4 whitespace-nowrap text-center">
+                                    <div className="flex flex-col sm:flex-row gap-2 justify-center">
+                                        <button
+                                            onClick={() => openUpdateModal(task)}
+                                            className="bg-blue-500 hover:bg-blue-600 text-white px-3 py-1 rounded-md shadow text-sm"
+                                        >
+                                            Update
+                                        </button>
+                                        <button
+                                            onClick={() => handleDelete(task._id)}
+                                            className="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded-md shadow text-sm"
+                                        >
+                                            Delete
+                                        </button>
+                                        <button
+                                            onClick={() => alert("View Bids clicked")}
+                                            className="bg-gray-700 hover:bg-gray-800 text-white px-3 py-1 rounded-md shadow text-sm"
+                                        >
+                                            Bids
+                                        </button>
+                                    </div>
                                 </td>
                             </tr>
                         ))}
@@ -176,11 +171,53 @@ const MyPostedTasks = () => {
                 </table>
             </div>
 
+            {/* Cards for small screens */}
+            <div className="md:hidden flex flex-col gap-6">
+                {tasks.map((task) => (
+                    <div
+                        key={task._id}
+                        className="bg-white shadow-md rounded-lg border border-gray-200 p-5 flex flex-col"
+                    >
+                        <h2 className="text-2xl font-semibold mb-2 text-emerald-700">{task.title}</h2>
+                        <p className="mb-1 text-sm font-medium text-gray-600">
+                            <span className="font-semibold">Category:</span> {task.category}
+                        </p>
+                        <p className="mb-1 text-sm font-medium text-gray-600">
+                            <span className="font-semibold">Deadline:</span>{" "}
+                            {new Date(task.deadline).toLocaleDateString()}
+                        </p>
+                        <p className="mb-3 text-sm font-medium text-gray-600">
+                            <span className="font-semibold">Status:</span> {task.status || "Pending"}
+                        </p>
+                        <div className="flex flex-wrap gap-2 mt-auto">
+                            <button
+                                onClick={() => openUpdateModal(task)}
+                                className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-md shadow text-sm flex-grow"
+                            >
+                                Update
+                            </button>
+                            <button
+                                onClick={() => handleDelete(task._id)}
+                                className="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-md shadow text-sm flex-grow"
+                            >
+                                Delete
+                            </button>
+                            <button
+                                onClick={() => alert("View Bids clicked")}
+                                className="bg-gray-700 hover:bg-gray-800 text-white px-4 py-2 rounded-md shadow text-sm flex-grow"
+                            >
+                                Bids
+                            </button>
+                        </div>
+                    </div>
+                ))}
+            </div>
+
             {/* Update Modal */}
             <dialog id="update_modal" className="modal">
                 <form
                     method="dialog"
-                    className="modal-box bg-white max-w-2xl p-6 rounded-xl shadow-xl border border-emerald-200"
+                    className="modal-box w-full max-w-xl sm:max-w-2xl bg-white p-6 rounded-xl shadow-xl border border-emerald-200"
                     onSubmit={(e) => {
                         e.preventDefault();
                         handleUpdateSubmit();
@@ -254,7 +291,7 @@ const MyPostedTasks = () => {
                             <div className="modal-action mt-6 flex justify-end gap-4">
                                 <button
                                     type="button"
-                                    className="btn bg-gray-300 text-gray-800 hover:bg-gray-400 rounded-md"
+                                    className="btn btn-outline btn-error"
                                     onClick={() => {
                                         document.getElementById("update_modal").close();
                                         setSelectedTask(null);
@@ -262,11 +299,8 @@ const MyPostedTasks = () => {
                                 >
                                     Cancel
                                 </button>
-                                <button
-                                    type="submit"
-                                    className="btn bg-emerald-600 text-white hover:bg-emerald-700 rounded-md"
-                                >
-                                    Save Changes
+                                <button type="submit" className="btn btn-success">
+                                    Update
                                 </button>
                             </div>
                         </>
@@ -274,7 +308,6 @@ const MyPostedTasks = () => {
                 </form>
             </dialog>
         </div>
-    
     );
 };
 

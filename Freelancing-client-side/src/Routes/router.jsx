@@ -36,9 +36,7 @@ const router = createBrowserRouter([
             {
                 path: 'browsetask',
                 element: (
-                    <PrivateRoute>
                         <BrowseTask />
-                    </PrivateRoute>
                 )
             },
             {
