@@ -15,7 +15,7 @@ import PrivateRoute from './../Provider/PrivateRoute';
 const router = createBrowserRouter([
     {
         path: "/",
-        element: <HomeLayOut />, // ✅ This will wrap all children with Header/Footer
+        element: <HomeLayOut />, // 
         errorElement: <ErrorPage />,
         children: [
             {
@@ -31,7 +31,7 @@ const router = createBrowserRouter([
                 )
             },
             {
-                path: 'browseTask',
+                path: 'browsetask',
                 element: (
                     <PrivateRoute>
                         <AddTask />
@@ -61,7 +61,7 @@ const router = createBrowserRouter([
         element: <AuthLayOut />,
         children: [
             {
-                path: "login", 
+                path: "login",
                 element: <Login />
             },
             {

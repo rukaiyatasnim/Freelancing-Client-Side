@@ -44,7 +44,7 @@ const Header = () => {
             </li>
             <li className='m-2'>
                 <NavLink
-                    to="/browseTask"
+                    to="/browsetask"
                     className={({ isActive }) =>
                         isActive
                             ? "text-cyan-500 font-semibold border-b-2 border-cyan-500"
