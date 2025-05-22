@@ -14,7 +14,7 @@ const AddTask = () => {
         userName: "",
     });
 
-    // 🔐 Get user from Firebase Auth
+    // 🔐 Get user info from Firebase Auth
     useEffect(() => {
         const unsubscribe = onAuthStateChanged(auth, (user) => {
             if (user) {
@@ -26,7 +26,7 @@ const AddTask = () => {
             }
         });
 
-        return () => unsubscribe(); // Cleanup
+        return () => unsubscribe(); // Cleanup listener
     }, []);
 
     const handleChange = (e) => {
@@ -36,25 +36,33 @@ const AddTask = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        const res = await fetch("http://localhost:3000/addtask", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(formData),
-        });
+        try {
+            const res = await fetch("http://localhost:3000/addtask", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "x-user-email": formData.userEmail, // <-- Add this header!
+                },
+                body: JSON.stringify(formData),
+            });
 
-        const data = await res.json();
-        if (data.insertedId || data.acknowledged) {
-            alert(" Task added successfully!");
-            setFormData((prev) => ({
-                ...prev,
-                title: "",
-                category: "",
-                description: "",
-                deadline: "",
-                budget: "",
-            }));
-        } else {
-            alert(" Failed to add task.");
+            const data = await res.json();
+
+            if (res.ok && (data.insertedId || data.acknowledged)) {
+                alert("Task added successfully!");
+                setFormData((prev) => ({
+                    ...prev,
+                    title: "",
+                    category: "",
+                    description: "",
+                    deadline: "",
+                    budget: "",
+                }));
+            } else {
+                alert(data.message || "Failed to add task.");
+            }
+        } catch (error) {
+            alert("Network error: " + error.message);
         }
     };
 
@@ -63,7 +71,6 @@ const AddTask = () => {
             <div className="bg-base-100 shadow-xl rounded-lg p-8">
                 <h2 className="text-2xl font-bold mb-6">➕ Add New Task</h2>
                 <form onSubmit={handleSubmit} className="space-y-4">
-                    {/* Form Fields */}
                     <input
                         type="text"
                         name="title"

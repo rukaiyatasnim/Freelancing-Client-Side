@@ -13,7 +13,7 @@ import AddTask from "../Components/AddTask";
 import PrivateRoute from './../Provider/PrivateRoute';
 import BrowseTask from "../Components/BrowseTask";
 import TaskDetails from './../Components/TaskDetails';
-import MyTask from "../Components/MyTask";
+import MyPostedTasks from "../Components/MyPostedTask";
 const router = createBrowserRouter([
     {
         path: "/",
@@ -52,7 +52,7 @@ const router = createBrowserRouter([
                 path: 'myPostedTask',
                 element: (
                     <PrivateRoute>
-                        <MyTask />
+                        <MyPostedTasks />
                     </PrivateRoute>
                 )
             },
