@@ -2,6 +2,7 @@ import React, { useContext } from 'react';
 import { NavLink, Link } from 'react-router-dom';
 import { AuthContext } from '../Provider/AuthProvider';
 import { toast } from 'react-hot-toast';
+import defaultUserImage from "../assets/user.jpg";
 
 const Header = () => {
     const { user, logOut } = useContext(AuthContext);

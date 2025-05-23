@@ -1,3 +1,4 @@
+import Featured from "./MainSection/Feature";
 import Partner from "./MainSection/Partner";
 import Review from "./MainSection/Review";
 import Slider from "./MainSection/Slider";
@@ -9,6 +10,7 @@ const Main = () => {
 
             <Slider></Slider>
             <TypewriterBanner></TypewriterBanner>
+            <Featured></Featured>
             <Review></Review>
             <Partner></Partner>
         </div>

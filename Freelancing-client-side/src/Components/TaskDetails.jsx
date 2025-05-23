@@ -7,7 +7,7 @@ const TaskDetails = () => {
     const [task, setTask] = useState(null);
     const [bidsCount, setBidsCount] = useState(0);
     const [error, setError] = useState("");
-    const userEmail = "user@example.com"; // replace with actual user email
+    const userEmail = "user@example.com"; // Replace with actual logged-in user's email
 
     useEffect(() => {
         const fetchTask = async () => {
@@ -58,49 +58,58 @@ const TaskDetails = () => {
         return (
             <div className="text-center text-red-600 mt-10 font-semibold">{error}</div>
         );
+
     if (!task)
-        return <div className="text-center mt-10 text-gray-500">Loading task...</div>;
+        return (
+            <div className="text-center mt-10 text-gray-500 animate-pulse">
+                Loading task...
+            </div>
+        );
 
     return (
-        <div className="max-w-md mx-auto my-12 p-5 bg-white rounded-xl shadow-md border border-emerald-300">
-            <div className="mb-4 bg-emerald-100 border border-emerald-300 rounded-lg p-3 text-center text-emerald-800 font-semibold text-base tracking-wide shadow-sm">
-                <span role="img" aria-label="star" className="mr-1">
-                    ⭐
-                </span>
-                You have placed bids for{" "}
-                <span className="text-emerald-900 font-bold">{bidsCount}</span>{" "}
-                {bidsCount === 1 ? "opportunity" : "opportunities"}.
+        <div className="max-w-2xl mx-auto my-14 px-6 py-8 bg-white border border-gray-200 rounded-2xl shadow-lg">
+            <div className="mb-5 bg-emerald-50 text-emerald-800 border border-emerald-200 p-4 rounded-lg text-sm text-center">
+                🎯 You have placed{" "}
+                <span className="font-semibold text-emerald-900">
+                    {bidsCount}
+                </span>{" "}
+                {bidsCount === 1 ? "bid" : "bids"} so far.
             </div>
 
-            <h1 className="text-2xl font-extrabold text-emerald-700 mb-4 tracking-tight">
+            <h1 className="text-3xl font-bold text-emerald-700 mb-4">
                 {task.title}
             </h1>
-            <div className="space-y-2 text-gray-700 text-sm leading-relaxed">
+
+            <div className="space-y-3 text-sm text-gray-700">
                 <p>
-                    <strong className="text-emerald-600">Category:</strong>{" "}
-                    <span className="font-medium">{task.category}</span>
+                    <span className="font-semibold text-emerald-600">Category:</span>{" "}
+                    {task.category}
                 </p>
                 <p>
-                    <strong className="text-emerald-600">Deadline:</strong>{" "}
-                    <span className="font-medium">
-                        {new Date(task.deadline).toLocaleDateString()}
+                    <span className="font-semibold text-emerald-600">Deadline:</span>{" "}
+                    {new Date(task.deadline).toLocaleDateString()}
+                </p>
+                <p>
+                    <span className="font-semibold text-emerald-600">Budget:</span> $
+                    {task.budget}
+                </p>
+                <p>
+                    <span className="font-semibold text-emerald-600">Shared By:</span>{" "}
+                    {task.userName || task.userEmail || "Anonymous"}
+                </p>
+                <p className="pt-2 text-base leading-relaxed">
+                    <span className="block text-emerald-600 font-semibold mb-1">
+                        Description:
                     </span>
-                </p>
-                <p>
-                    <strong className="text-emerald-600">Budget:</strong>{" "}
-                    <span className="font-medium">${task.budget}</span>
-                </p>
-                <p>
-                    <strong className="text-emerald-600">Description:</strong>{" "}
-                    <span className="font-normal">{task.description}</span>
+                    {task.description}
                 </p>
             </div>
 
             <button
                 onClick={handleBid}
-                className="mt-6 w-full bg-emerald-700 hover:bg-emerald-800 text-white py-3 rounded-lg font-semibold shadow-md transition duration-300 flex justify-center items-center gap-2"
+                className="mt-8 w-full bg-gradient-to-r from-emerald-600 to-emerald-700 hover:from-emerald-700 hover:to-emerald-800 text-white py-3 rounded-xl font-semibold shadow-md transition duration-300 text-center"
             >
-                Place Bid
+                🚀 Place Your Bid
             </button>
         </div>
     );
