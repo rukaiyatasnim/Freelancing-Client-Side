@@ -5,50 +5,55 @@ import 'swiper/css/navigation';
 import 'swiper/css/pagination';
 import { Link } from 'react-router-dom';
 
-const TextSlider = () => {
-    const slides = [
-        {
-            title: "Start Freelancing Today",
-            desc: "Join hundreds of local freelancers and grow your career with confidence.",
-            cta: <Link to="/auth/register">Join Now</Link>,
-        },
-        {
-            title: "Hire in Under 5 Minutes",
-            desc: "Post your task, get instant offers, and hire the right freelancer fast.",
-            cta: <Link to="/addtask">Post A Task</Link>,
-        },
-        {
-            title: "Trusted by 1,000+ Clients",
-            desc: "Our platform has helped complete over 5,000 jobs with verified payment.",
-            cta: <Link to="/browsetask">Explore Here</Link>,
-        },
-    ];
 
-    return (
-        <div className="w-full max-w-screen-xl mx-auto mt-8 bg-green-200 rounded-lg">
-            <Swiper
-                modules={[Navigation, Pagination, Autoplay]}
-                spaceBetween={30}
-                slidesPerView={1}
-                navigation
-                pagination={{ clickable: true }}
-                autoplay={{ delay: 4000 }}
-                loop
-            >
-                {slides.map((slide, i) => (
-                    <SwiperSlide key={i}>
-                        <div className="h-[300px] flex flex-col justify-center items-center text-center px-4 md:px-16">
-                            <h2 className="text-3xl md:text-4xl font-bold text-green-800 mb-4">{slide.title}</h2>
-                            <p className="text-green-700 mb-6 max-w-2xl">{slide.desc}</p>
-                            <button className="bg-green-700 text-white px-5 py-2 rounded-full hover:bg-green-800 transition">
-                                {slide.cta}
-                            </button>
-                        </div>
-                    </SwiperSlide>
-                ))}
-            </Swiper>
-        </div>
-    );
-};
+const slides = [
+    {
+        title: "Start Freelancing Today",
+        desc: "Join hundreds of local freelancers and grow your career with confidence.",
+        link: "/auth/register",
+        btn: "Join Now",
+    },
+    {
+        title: "Hire in Under 5 Minutes",
+        desc: "Post your task, get instant offers, and hire the right freelancer fast.",
+        link: "/addtask",
+        btn: "Post A Task",
+    },
+    {
+        title: "Trusted by 1,000+ Clients",
+        desc: "Our platform has helped complete over 5,000 jobs with verified payment.",
+        link: "/browsetask",
+        btn: "Explore Here",
+    },
+];
+
+const TextSlider = () => (
+    <div className="max-w-screen-xl mx-auto mt-8 bg-green-200 dark:bg-green-900 rounded-lg">
+        <Swiper
+            modules={[Navigation, Pagination, Autoplay]}
+            spaceBetween={30}
+            slidesPerView={1}
+            navigation
+            pagination={{ clickable: true }}
+            autoplay={{ delay: 4000 }}
+            loop
+        >
+            {slides.map(({ title, desc, link, btn }, i) => (
+                <SwiperSlide key={i}>
+                    <div className="h-[300px] flex flex-col justify-center items-center text-center px-4">
+                        <h2 className="text-3xl font-bold text-green-800 dark:text-green-100 mb-4">{title}</h2>
+                        <p className="text-green-700 dark:text-green-200 mb-6">{desc}</p>
+                        <Link
+                            to={link}
+                            className="bg-green-700 text-white px-5 py-2 rounded-full hover:bg-green-800 dark:hover:bg-green-600 transition"
+                        >
+                            {btn}
+                        </Link>
+                    </div>
+                </SwiperSlide>
+            ))}
+        </Swiper>
+    </div>
+);
 
 export default TextSlider;

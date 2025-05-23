@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import toast from "react-hot-toast";
+import Loading from "../Pages/Loading";
 
 const TaskDetails = () => {
     const { id } = useParams();
@@ -62,7 +63,7 @@ const TaskDetails = () => {
     if (!task)
         return (
             <div className="text-center mt-10 text-gray-500 animate-pulse">
-                Loading task...
+                <Loading></Loading>
             </div>
         );
 

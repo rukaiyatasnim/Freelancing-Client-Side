@@ -7,12 +7,11 @@ import TypewriterBanner from './TypewriterBanner';
 const Main = () => {
     return (
         <div>
-
-            <Slider></Slider>
-            <TypewriterBanner></TypewriterBanner>
-            <Featured></Featured>
-            <Review></Review>
-            <Partner></Partner>
+            <Slider />
+            <TypewriterBanner />
+            <Featured />
+            <Review />
+            <Partner />
         </div>
     );
 };

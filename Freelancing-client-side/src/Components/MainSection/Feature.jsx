@@ -19,6 +19,7 @@ const Feature = () => {
     }, []);
 
     return (
+
         <div className="max-w-6xl mx-auto px-6 py-10 bg-gradient-to-br from-green-50 to-green-100 rounded-lg shadow-lg">
             <h2 className="text-3xl md:text-4xl font-bold text-center text-green-800 mb-10">
                 🌿 Featured Tasks With Nearest Deadlines
@@ -58,6 +59,7 @@ const Feature = () => {
                 </button>
             </div>
         </div>
+
     );
 };
 

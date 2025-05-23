@@ -19,7 +19,7 @@ const Contact = () => {
                 </p>
                 <button
                     onClick={() => navigate('/')}
-                    className="px-6 py-2 bg-cyan-800 text-white rounded-full"
+                    className="px-6 py-2 bg-emerald-700 text-white rounded-full"
                 >
                     Go to Homepage
                 </button>
