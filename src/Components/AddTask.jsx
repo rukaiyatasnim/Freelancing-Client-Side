@@ -58,7 +58,7 @@ const AddTask = () => {
 
         setSubmitting(true);
         try {
-            const res = await fetch("http://localhost:3000/addtask", {
+            const res = await fetch("https://freelancing-crud-server.vercel.app/addtask", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",

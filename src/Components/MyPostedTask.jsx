@@ -23,7 +23,7 @@ const MyPostedTasks = () => {
             setError(null);
 
             try {
-                const res = await fetch("http://localhost:3000/mytasks", {
+                const res = await fetch("https://freelancing-crud-server.vercel.app/mytasks", {
                     headers: {
                         "x-user-email": user.email,
                     },
@@ -61,7 +61,7 @@ const MyPostedTasks = () => {
 
         if (result.isConfirmed) {
             try {
-                const res = await fetch(`http://localhost:3000/tasks/${taskId}`, {
+                const res = await fetch(`https://freelancing-crud-server.vercel.app/tasks/${taskId}`, {
                     method: "DELETE",
                     headers: {
                         "x-user-email": user.email,
@@ -100,7 +100,7 @@ const MyPostedTasks = () => {
 
     const handleUpdateSubmit = async () => {
         try {
-            const res = await fetch(`http://localhost:3000/tasks/${selectedTask._id}`, {
+            const res = await fetch(`https://freelancing-crud-server.vercel.app/tasks/${selectedTask._id}`, {
                 method: "PUT",
                 headers: {
                     "Content-Type": "application/json",
@@ -126,7 +126,7 @@ const MyPostedTasks = () => {
 
     const handleShowBids = async (task) => {
         try {
-            const res = await fetch(`http://localhost:3000/tasks/${task._id}/bids/count`, {
+            const res = await fetch(`https://freelancing-crud-server.vercel.app/tasks/${task._id}/bids/count`, {
                 headers: {
                     "x-user-email": user.email,
                 },

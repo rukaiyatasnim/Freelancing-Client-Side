@@ -9,7 +9,7 @@ const BrowseTasks = () => {
     useEffect(() => {
         const fetchTasks = async () => {
             try {
-                const res = await fetch("http://localhost:3000/tasks");
+                const res = await fetch("https://freelancing-crud-server.vercel.app/tasks");
                 if (!res.ok) throw new Error("Failed to fetch tasks.");
 
                 const data = await res.json();

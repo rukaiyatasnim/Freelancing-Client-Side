@@ -7,7 +7,7 @@ A platform connecting freelancers and clients for task posting, bidding, and pro
 
 **Developed by:** Rukaiya Tasnim
 
-🔗 **Live Website:**  
+🔗 **Live Website:** https://freelancer-726da.web.app/
 []()
 
 ---

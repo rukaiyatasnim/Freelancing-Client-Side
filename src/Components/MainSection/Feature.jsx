@@ -8,7 +8,7 @@ const Feature = () => {
     useEffect(() => {
         const fetchFeaturedTasks = async () => {
             try {
-                const res = await fetch("http://localhost:3000/featured-tasks");
+                const res = await fetch("https://freelancing-crud-server.vercel.app/featured-tasks");
                 const data = await res.json();
 
                 // Sort tasks by nearest deadline first

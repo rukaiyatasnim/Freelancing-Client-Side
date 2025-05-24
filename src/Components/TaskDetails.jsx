@@ -13,7 +13,7 @@ const TaskDetails = () => {
     useEffect(() => {
         const fetchTask = async () => {
             try {
-                const res = await fetch(`http://localhost:3000/tasks/${id}`);
+                const res = await fetch(`https://freelancing-crud-server.vercel.app/tasks/${id}`);
                 if (!res.ok) throw new Error("Failed to fetch task");
                 const data = await res.json();
                 setTask(data);
@@ -24,7 +24,7 @@ const TaskDetails = () => {
 
         const fetchBidsCount = async () => {
             try {
-                const res = await fetch("http://localhost:3000/bids/count", {
+                const res = await fetch("https://freelancing-crud-server.vercel.app/bids/count", {
                     headers: { "x-user-email": userEmail },
                 });
                 if (!res.ok) throw new Error("Failed to fetch bids count");
@@ -41,7 +41,7 @@ const TaskDetails = () => {
 
     const handleBid = async () => {
         try {
-            const res = await fetch("http://localhost:3000/bids", {
+            const res = await fetch("https://freelancing-crud-server.vercel.app/bids", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ userEmail, taskId: id }),
