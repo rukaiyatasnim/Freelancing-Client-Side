@@ -10,6 +10,10 @@ const Feature = () => {
             try {
                 const res = await fetch("http://localhost:3000/featured-tasks");
                 const data = await res.json();
+
+                // Sort tasks by nearest deadline first
+                data.sort((a, b) => new Date(a.deadline) - new Date(b.deadline));
+
                 setTasks(data);
             } catch (error) {
                 console.error("Error fetching featured tasks:", error);
@@ -19,7 +23,6 @@ const Feature = () => {
     }, []);
 
     return (
-
         <div className="max-w-6xl mx-auto px-6 py-10 bg-gradient-to-br from-green-50 to-green-100 rounded-lg shadow-lg">
             <h2 className="text-3xl md:text-4xl font-bold text-center text-green-800 mb-10">
                 🌿 Featured Tasks With Nearest Deadlines
@@ -43,9 +46,15 @@ const Feature = () => {
                             <strong>Deadline:</strong>{" "}
                             {new Date(task.deadline).toLocaleDateString()}
                         </p>
-                        <p className="text-sm text-green-600">
+                        <p className="text-sm text-green-600 mb-4">
                             <strong>Budget:</strong> ${task.budget}
                         </p>
+                        <button
+                            onClick={() => navigate(`/tasks/${task._id}`)}
+                            className="bg-green-700 hover:bg-green-800 text-white px-4 py-2 text-sm rounded shadow"
+                        >
+                            See Details
+                        </button>
                     </div>
                 ))}
             </div>
@@ -59,7 +68,6 @@ const Feature = () => {
                 </button>
             </div>
         </div>
-
     );
 };
 

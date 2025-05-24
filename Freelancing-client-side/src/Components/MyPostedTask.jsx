@@ -7,7 +7,7 @@ import Swal from "sweetalert2";
 const MyPostedTasks = () => {
     const { user } = useContext(AuthContext);
     const [tasks, setTasks] = useState([]);
-    const [loading, setLoading] = useState(false); 
+    const [loading, setLoading] = useState(false); // initially false
     const [error, setError] = useState(null);
     const [selectedTask, setSelectedTask] = useState(null);
 
@@ -150,8 +150,14 @@ const MyPostedTasks = () => {
                 My Posted Tasks
             </h1>
 
-            {loading && <p className="text-center py-10 text-gray-700 dark:text-gray-300">Loading tasks...</p>}
-            {error && <p className="text-center py-10 text-red-600 dark:text-red-400">{error}</p>}
+            {loading && (
+                <p className="text-center py-10 text-gray-700 dark:text-gray-300">
+                    Loading tasks...
+                </p>
+            )}
+            {error && (
+                <p className="text-center py-10 text-red-600 dark:text-red-400">{error}</p>
+            )}
 
             {!loading && tasks.length === 0 && !error && (
                 <div className="flex flex-col items-center justify-center min-h-[70vh] px-4">
@@ -270,76 +276,122 @@ const MyPostedTasks = () => {
                 className="rounded-lg p-0 max-w-lg w-full border-0 shadow-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100"
             >
                 {selectedTask && (
-                    <>
-                        <form method="dialog" className="p-6">
-                            <h3 className="text-xl font-semibold mb-4 text-emerald-700 dark:text-emerald-400">
-                                Update Task
-                            </h3>
+                    <form method="dialog" className="p-6">
+                        <h3 className="text-xl font-semibold mb-4 text-emerald-700 dark:text-emerald-400">
+                            Update Task
+                        </h3>
 
-                            <label className="block mb-2 text-sm font-medium">Title</label>
-                            <input
-                                name="title"
-                                type="text"
-                                value={selectedTask.title}
-                                onChange={handleChange}
-                                className="w-full rounded border border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-gray-100 p-2 mb-4"
-                            />
+                        <label className="block mb-2 text-sm font-medium">Title</label>
+                        <input
+                            name="title"
+                            type="text"
+                            value={selectedTask.title}
+                            onChange={handleChange}
+                            className="w-full rounded border border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-gray-100 p-2 mb-4"
+                        />
 
-                            <label className="block mb-2 text-sm font-medium">Category</label>
-                            <input
-                                name="category"
-                                type="text"
-                                value={selectedTask.category}
-                                onChange={handleChange}
-                                className="w-full rounded border border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-gray-100 p-2 mb-4"
-                            />
+                        <label className="block mb-2 text-sm font-medium">Category</label>
+                        <select
+                            name="category"
+                            value={selectedTask.category}
+                            onChange={handleChange}
+                            className="w-full rounded border border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-gray-100 p-2 mb-4"
+                            required
+                        >
+                            <option value="">Select Category</option>
+                            <option value="Web Development">Web Development</option>
+                            <option value="Design">Design</option>
+                            <option value="Writing">Writing</option>
+                            <option value="Video Editor">Video Editor</option>
+                            <option value="Marketing">Marketing</option>
+                        </select>
 
-                            <label className="block mb-2 text-sm font-medium">Deadline</label>
-                            <input
-                                name="deadline"
-                                type="date"
-                                value={new Date(selectedTask.deadline).toISOString().substring(0, 10)}
-                                onChange={handleChange}
-                                className="w-full rounded border border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-gray-100 p-2 mb-4"
-                            />
+                        <label className="block mb-2 text-sm font-medium">Description</label>
+                        <textarea
+                            name="description"
+                            value={selectedTask.description}
+                            onChange={handleChange}
+                            className="w-full rounded border border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-gray-100 p-2 mb-4"
+                            rows={4}
+                        />
 
-                            <label className="block mb-2 text-sm font-medium">Status</label>
-                            <select
-                                name="status"
-                                value={selectedTask.status || "Pending"}
-                                onChange={handleChange}
-                                className="w-full rounded border border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-gray-100 p-2 mb-4"
+                        <label className="block mb-2 text-sm font-medium">Deadline</label>
+                        <input
+                            name="deadline"
+                            type="date"
+                            value={new Date(selectedTask.deadline).toISOString().substring(0, 10)}
+                            onChange={handleChange}
+                            className="w-full rounded border border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-gray-100 p-2 mb-4"
+                        />
+
+                        <label className="block mb-2 text-sm font-medium">Budget</label>
+                        <input
+                            name="budget"
+                            type="number"
+                            value={selectedTask.budget}
+                            onChange={handleChange}
+                            className="w-full rounded border border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-gray-100 p-2 mb-4"
+                            min={0}
+                        />
+
+                        <label className="block mb-2 text-sm font-medium">Status</label>
+                        <select
+                            name="status"
+                            value={selectedTask.status || "Pending"}
+                            onChange={handleChange}
+                            className="w-full rounded border border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-gray-100 p-2 mb-4"
+                        >
+                            <option value="Pending">Pending</option>
+                            <option value="In Progress">In Progress</option>
+                            <option value="Completed">Completed</option>
+                            <option value="Cancelled">Cancelled</option>
+                        </select>
+
+                        {/* Read-only User Email */}
+                        <input
+                            type="email"
+                            name="userEmail"
+                            value={selectedTask.userEmail || ""}
+                            readOnly
+                            className="input input-bordered w-full bg-gray-100 cursor-not-allowed mb-4"
+                            aria-label="User Email"
+                        />
+
+                        {/* Read-only User Name */}
+                        <input
+                            type="text"
+                            name="userName"
+                            value={selectedTask.userName || ""}
+                            readOnly
+                            className="input input-bordered w-full bg-gray-100 cursor-not-allowed mb-4"
+                            aria-label="User Name"
+                        />
+
+                        <div className="flex justify-end gap-4 mt-6">
+                            <button
+                                type="button"
+                                onClick={() => {
+                                    setSelectedTask(null);
+                                    document.getElementById("update_modal").close();
+                                }}
+                                className="px-4 py-2 rounded bg-gray-300 dark:bg-gray-700 text-gray-900 dark:text-gray-200 hover:bg-gray-400 dark:hover:bg-gray-600 transition"
                             >
-                                <option value="Pending">Pending</option>
-                                <option value="In Progress">In Progress</option>
-                                <option value="Completed">Completed</option>
-                                <option value="Cancelled">Cancelled</option>
-                            </select>
-
-                            <div className="flex justify-end gap-4 mt-6">
-                                <button
-                                    type="button"
-                                    onClick={() => {
-                                        setSelectedTask(null);
-                                        document.getElementById("update_modal").close();
-                                    }}
-                                    className="px-4 py-2 rounded bg-gray-300 dark:bg-gray-700 text-gray-900 dark:text-gray-200 hover:bg-gray-400 dark:hover:bg-gray-600 transition"
-                                >
-                                    Cancel
-                                </button>
-                                <button
-                                    type="button"
-                                    onClick={handleUpdateSubmit}
-                                    className="px-4 py-2 rounded bg-emerald-700 hover:bg-emerald-800 text-white"
-                                >
-                                    Update
-                                </button>
-                            </div>
-                        </form>
-                    </>
+                                Cancel
+                            </button>
+                            <button
+                                type="button"
+                                onClick={handleUpdateSubmit}
+                                className="px-4 py-2 rounded bg-emerald-700 hover:bg-emerald-800 text-white"
+                            >
+                                Update
+                            </button>
+                        </div>
+                    </form>
                 )}
             </dialog>
+
         </div>
+
     );
 };
 

@@ -1,3 +1,5 @@
+<!-- @format -->
+
 # 🚀 Hirero — Freelance Task Marketplace (Client-Side)
 
 **Purpose:**  
@@ -33,12 +35,12 @@ A platform connecting freelancers and clients for task posting, bidding, and pro
 - **React Hot Toast / SweetAlert**
 - **React Simple Typewriter**
 - **Swiper.js / AOS (Animations)**
-- **Axios / Fetch API**
+- **Fetch API**
 
 ---
 
 ## 📦 NPM Packages Used
 
 ```bash
-npm install react-router-dom firebase react-hot-toast sweetalert2 daisyui react-simple-typewriter swiper aos axios
+npm install react-router-dom firebase react-hot-toast sweetalert2 daisyui react-simple-typewriter swiper
 ```
