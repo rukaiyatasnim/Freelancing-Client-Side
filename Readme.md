@@ -8,6 +8,12 @@ A platform connecting freelancers and clients for task posting, bidding, and pro
 **Developed by:** Rukaiya Tasnim
 
 🔗 **Live Website:** https://freelancer-726da.web.app/
+
+##  Screenshot
+
+### Browse Tasks Page
+![Hirero — Browse Tasks](https://i.ibb.co/dsF9V20R/screencapture-freelancer-726da-web-app-browsetask-2025-08-08-16-46-50.png)
+
 []()
 
 ---
